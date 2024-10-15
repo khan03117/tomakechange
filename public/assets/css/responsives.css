@@ -1,0 +1,379 @@
+@media screen and (max-width: 992px) {
+    body {
+        overflow-x: hidden !important;
+    }
+
+    html {
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+
+    }
+
+    a.navbar-brand img {
+        max-width: 140px !important;
+        transform: scale(1);
+    }
+
+    .navbar-toggler {
+        width: 37px;
+        height: 28px;
+        background-color: #077773 !important;
+        color: #fff;
+        overflow: hidden;
+        /* text-align: center; */
+        /* justify-content: center; */
+        /* display: grid; */
+        padding: 0;
+        border-radius: 4px;
+    }
+
+    .navbar-toggler[aria-expanded="true"] .close {
+        display: block;
+
+    }
+
+    .navbar-toggler[aria-expanded="true"] .open {
+        display: none;
+
+    }
+
+    .navbar-toggler[aria-expanded="false"] .open {
+        display: block;
+
+    }
+
+    .navbar-toggler[aria-expanded="false"] .close {
+        display: none;
+
+    }
+
+    .navbar-collapse {
+        /*position: fixed;*/
+        background: #077773;
+        /*top: 7rem;*/
+        /*width: 100%;*/
+        /*left: 0;*/
+        /*padding: 20px;*/
+        /*z-index: 9;*/
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+
+
+    }
+
+    .navbar-collapse a {
+        color: #fff !important;
+        font-size: 14px;
+        padding: 10px 0;
+        margin: 0;
+    }
+
+    .navbar-collapse a.expertjoinbtn {
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-top: 10px;
+    }
+
+    .space {
+        padding: 1.5rem 0;
+        padding-left:15px;
+    }
+
+    .social-icon {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+    }
+
+    .home-content h2 {
+        font-size: 1.6rem;
+        margin-bottom: 1.8rem;
+    }
+
+    .home-content .main-para {
+        font-size: 15px;
+        margin-bottom: 1.8rem;
+    }
+
+    .btn-1 {
+        min-width: 21rem;
+    }
+
+    .how_it_works #svg1 {
+        top: 0rem;
+        display: none;
+
+    }
+
+    .how_it_works {
+        margin-top: 64px;
+        margin-bottom: 0;
+    }
+
+    .section-title h3 {
+        font-size: 2rem;
+        margin: 20px;
+    }
+
+    .how_it_image {
+        margin-bottom: 0.8rem;
+        text-align: center;
+    }
+
+    .how_it_works .col-md-3 {
+        margin-bottom: 2rem;
+    }
+
+    .how_it_works p {
+        font-size: 12px;
+    }
+
+    .contact-details p {
+        font-size: 12px;
+    }
+
+    .how_it_works #svg2 {
+        bottom: -4rem;
+        display: none;
+    }
+
+    .section-title {
+        margin-bottom: 1rem;
+    }
+
+    .offerbox {
+        width: 50%;
+    }
+
+    .counselling-figure {
+        position: relative;
+        margin-top: 0;
+        margin-right: 0px;
+        right: 0px;
+        border-bottom-left-radius: 0rem;
+        overflow: hidden;
+    }
+
+    .services .row .col-md-6 {
+        margin-bottom: 2rem;
+    }
+
+    .footer {
+        margin-top: 6rem;
+    }
+
+    .aboutusSection p, .spclpara {
+        font-size: 13px !important;
+    }
+
+    .aboutSection h4 {
+        font-size: 23px;
+        line-height: 1;
+    }
+
+    .aboutSection p {
+        font-size: 13px;
+    }
+
+    .aboutSection figure {
+        padding: 1rem;
+    }
+
+    .vision {
+        padding: 1.2rem;
+        border: 3px solid #43D685;
+        border-radius: 0.9rem;
+        position: relative;
+        font-size: 13px;
+    }
+
+    .vision .upper_quote {
+        top: -16px;
+        left: 29px;
+    }
+
+    .vision .lower_quote {
+        bottom: -16px;
+        right: 29px;
+    }
+
+    .vision .quote {
+        position: absolute;
+        max-width: 25px;
+    }
+
+    .slok {
+        margin-top: 0rem;
+    }
+
+    .slok_img {
+        padding: 0;
+    }
+
+    .footer {
+        margin-top: 2rem;
+        background: #077773;
+
+    }
+
+    .btn-all .btnicon {
+        position: relative;
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        border-radius: 50%;
+        background: #f67c33;
+        line-height: 28px;
+        font-size: 16px;
+        font-weight: 800;
+        right: -8px;
+    }
+
+    .features-section p {
+        font-size: 12px;
+    }
+
+    .features-section h5 {
+        font-size: 12px;
+    }
+
+    .features-section .circle {
+        width: 38px;
+        height: 38px;
+        text-align: center;
+        padding: 7px;
+    }
+
+    .counselling-reasons li, .counselling-section p, .services p {
+        font-size: 12px;
+    }
+
+    .services h4 {
+
+        font-size: 18px;
+
+        margin-bottom: 1rem;
+    }
+
+    .services .row:nth-child(2n + 1), .services .row {
+        text-align: center;
+    }
+
+    .offerbox .circle {
+        width: 65px;
+        height: 65px;
+        margin: 0 auto;
+    }
+
+    .offerbox h4 {
+        font-size: 12px;
+    }
+
+    .contact-details .col-11 p:nth-child(1), .contact-details .col-11 p {
+        font-size: 12px;
+    }
+
+    .contact-details i {
+        margin-right: 5px;
+    }
+
+    .dashed-content .circle {
+        width: 41px;
+        height: 42px;
+        line-height: 1;
+        padding: 14px;
+    }
+
+    .dashed-content .circle img {
+        position: relative;
+        top: -5px;
+        max-height: 20px;
+    }
+
+    .services .row {
+        align-items: center;
+        margin-bottom: 0rem;
+    }
+
+    .services .row .col-md-6 {
+        margin-bottom: 1rem;
+    }
+
+    .blogbox h4 {
+        font-size: 16px;
+
+        margin-bottom: 0.6rem;
+    }
+
+    .counsellingsection p {
+        font-size: 14px;
+        text-align: justify;
+    }
+
+    .joinSection p {
+        font-size: 14px;
+    }
+
+    .askformbg {
+        background: #efefef;
+        padding: 1rem;
+        border-radius: 0.4rem;
+        box-shadow: 11px 10px 2px #e1e0e0;
+    }
+
+    .askformbg .form-select, .askformbg .form-control {
+        font-size: 14px;
+    }
+
+   
+
+    .table-responsive>.table>thead>tr>th, .table-responsive>.table>tbody>tr>th, .table-responsive>.table>tfoot>tr>th, .table-responsive>.table>thead>tr>td, .table-responsive>.table>tbody>tr>td, .table-responsive>.table>tfoot>tr>td {
+        white-space: nowrap !important;
+    }
+
+    .team__box .image__team figure {
+        text-align: center;
+        height: auto;
+    }
+
+    .team__box .image__team figure img {
+
+        height: 92px;
+        width: 92px;
+        object-fit: contain;
+        border-radius: 50%;
+        margin-top: 1rem;
+    }
+
+    .profile_box table tr td:nth-child(1) {
+        min-width: 135px;
+        font-size: 13px;
+    }
+
+    .profile_box table tr td:nth-child(1) i {
+        font-size: 11px;
+        margin-right: 2px;
+    }
+
+    .profile_box table tr td, .profile_box table tr td ul li, .profile_box table tr td p {
+        font-size: 12px;
+    }
+     .coachingSection h3:not(.section-title h3) {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #f67c33;
+        position: relative;
+        padding-left: 15px;
+    }
+    .profile_box_image{
+        width:100px;
+        height:100px;
+        object-fit:cover;
+    }
+    .container.space{
+        padding-left: 15px !important;
+    }
+}

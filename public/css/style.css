@@ -1,0 +1,19 @@
+.space{
+    padding: 3rem 0;
+}
+
+body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>a i {
+    color: #077773 !important;
+}
+body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>a{
+     color: #077773 !important;
+}
+#sidebar-menu ul li a:hover {
+   color: #fff !important;
+}
+#sidebar-menu ul li a:hover i, .mm-active .active i {
+   color: #fff !important;
+}
+.mm-active .active {
+    color: #fff !important;
+}
