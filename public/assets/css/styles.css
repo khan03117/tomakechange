@@ -146,14 +146,13 @@ a.navbar-brand img {
     font-family: "Playfair Display", serif;
     font-size: 2.4rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+
 }
 
 .home-content h4 {
     font-family: "Playfair Display", serif;
-    font-size: 21px;
+    font-size: 26px;
     font-weight: 400;
-    margin-top: 2rem;
 }
 
 .home-content .main-para {
@@ -246,10 +245,9 @@ a.navbar-brand img {
 }
 
 .offerbox {
-    min-width: 140px;
-    width: 140px;
+
     height: 140px;
-    max-width: 20%;
+    max-width: 25%;
     background-color: #fff;
     padding: 10px;
 }
@@ -290,6 +288,10 @@ a.navbar-brand img {
 
 }
 
+.expertises_span span {
+    font-size: 12px;
+}
+
 .statusDropdown a {
     font-size: 12px;
     border-radius: 0;
@@ -305,6 +307,27 @@ table tr td {
 
     font-size: 12px;
     border-width: 1px !important;
+}
+
+.lead_header {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.contact_bar {
+    width: 4px;
+    height: 27px;
+    background-color: #b4b1b1;
+    display: inline-block;
+}
+
+.contact_bar.active {
+    background-color: #077773;
+}
+
+.rotate-90 {
+    transform: rotate(90deg);
 }
 
 .leadbox ul {
@@ -328,6 +351,147 @@ table tr td {
     padding: 1rem;
 
 }
+
+.otherinfobuttongroup button {
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    width: 140px;
+    position: relative;
+    outline: none;
+    border: none;
+    text-wrap: nowrap;
+    overflow: hidden;
+}
+
+.otherinfobuttongroup button span {
+    position: relative;
+    z-index: 9;
+    pointer-events: none;
+}
+
+.otherinfobuttongroup button.active span {
+    color: white;
+}
+
+.indicatorbutton {
+    background: #077773;
+    width: 140px;
+    border-radius: 4px;
+    height: 30px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: all 0.3s;
+}
+
+/* Style the star rating container */
+.rating-container {
+    display: inline-block;
+}
+
+/* Style each star */
+.star {
+    font-size: 50px;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.3s;
+}
+
+.star.active {
+    color: gold;
+}
+
+.offeringsul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.offeringsul li strong {
+    color: #f67c33;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.offeringsul li {
+    font-size: 14px;
+    padding-bottom: 0.5rem;
+}
+
+.featuresspan span {
+    position: relative;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+.featuresspan span:not(:last-of-type):before {
+    content: "|";
+    position: absolute;
+    right: -5px;
+    top: 0;
+}
+
+.keybenefit ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.reviewform label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+}
+
+.reviewBox {
+    background-color: #fff;
+    max-height: 388px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.reviewBox p {
+    font-size: 13px !important;
+
+
+}
+
+.reviewBox h5 {
+    font-size: 16px;
+    font-weight: 400;
+    display: inline-block;
+    border-bottom: 1px solid #077773;
+    padding-bottom: 0.5rem;
+}
+
+.reviewform .form-control {
+    box-shadow: none;
+    border-color: #077773;
+}
+
+.reviewform .form-group {
+    margin-bottom: 0.5rem;
+}
+
+.keybenefit ul li {
+    position: relative;
+    padding-bottom: 0.4rem;
+    font-size: 14px;
+    color: #077773;
+    padding-left: 1rem;
+}
+
+.keybenefit ul li::before {
+    content: "\21D2";
+    position: absolute;
+    left: 0;
+    top: 0;
+
+}
+
 
 .leadcontainer {
     max-height: 50vh;
@@ -816,10 +980,12 @@ table tr td {
 }
 
 .join-form {
-    background: #07777329;
+    /* background: #07777329; */
+    background: radial-gradient(circle at left, #07777336 50%, #fff 50%);
     padding: 3rem;
     border-radius: 1.4rem;
-    box-shadow: 1px 2px 0px 0px #ccc;
+    box-shadow: inset 7px -1px 10px 0px #077773,
+        7px 1px 0px 0px #077773ad;
 }
 
 .join-form .form-select,

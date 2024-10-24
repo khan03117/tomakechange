@@ -183,14 +183,20 @@
                                 <label for="">
                                     Enter Role <small class="text-danger">*Required</small>
                                 </label>
-                                <select name="apply_for" onchange="get_sub_category(event)" id="apply_for"
-                                    class="form-select">
-                                    <option value="" selected disabled>--Select--</option>
+                                <select name="apply_for[]" multiple id="apply_for" class="form-select">
+
                                     @foreach ($categories as $cat)
-                                        <option value="{{ $cat['id'] }}" @selected($cat['id'] == $expert['designation'])>
+                                        <option value="{{ $cat['id'] }}" @selected(in_array($cat['id'], $ecats))>
                                             {{ $cat['title'] }}</option>
                                     @endforeach
                                 </select>
+                                <script>
+                                    $("#apply_for").select2({
+                                        closeOnSelect: false,
+                                        multiple: true,
+                                        search: true
+                                    });
+                                </script>
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="">
@@ -249,26 +255,10 @@
                                     Therapy
                                 </label>
                                 <input type="text" name="therapy" id="therapy" placeholder="Therapy you provide"
-                                    class="form-control" maxlength="150" value="{{$expert['therapy']}}">
+                                    class="form-control" maxlength="150" value="{{ $expert['therapy'] }}">
                             </div>
 
                             <script>
-                                $("#apply_for").on('change', function() {
-                                    let cid = $(this).val();
-
-                                    $.post(`${url}/ajax/get_posts`, {
-                                        id: cid
-                                    }, function(res) {
-                                        $("#postname").html(res);
-                                        if (cid != '1') {
-                                            $("#sub_category").parent().hide();
-                                            $("#therapy").parent().hide();
-                                        } else {
-                                            $("#sub_category").parent().show();
-                                            $("#therapy").parent().show();
-                                        }
-                                    });
-                                });
                                 $("#postname").on('change', function() {
                                     let rl = $(this).val();
                                     if (rl == '0') {
@@ -315,8 +305,8 @@
                                 @endphp
                                 <select name="mode[]" multiple id="mode" class="form-select">
 
-                                    <option value="Video" @selected(in_array('Video', $modes))>Video</option>
-                                    <option value="Audio" @selected(in_array('Audio', $modes))>Audio</option>
+                                    <option value="Online" @selected(in_array('Online', $modes))>Online</option>
+                                    <option value="Offline" @selected(in_array('Offline', $modes))>Offline</option>
                                 </select>
                                 <script>
                                     $("#mode").select2({
@@ -326,7 +316,7 @@
                                     })
                                 </script>
                             </div>
-                            <div class="col-md-3 form-group">
+                            {{-- <div class="col-md-3 form-group ">
                                 <label for="">
                                     30 Min Fee <small class="text-danger">*Required</small>
                                 </label>
@@ -343,7 +333,7 @@
                                     oninput="return this.value = this.value.replace(/[^0-9\.]/g,'');" min="{{$charges->for_60}}"
                                     max="1500" name="fee[]" value="{{ $fee_60 ? $fee_60['fee'] : 0 }}"
                                     id="" class="form-control nospace">
-                            </div>
+                            </div> --}}
 
                             <div class="col-md-12">
                                 <label for="">

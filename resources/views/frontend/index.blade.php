@@ -41,60 +41,75 @@
     <section class="pb-md-0 pb-5">
         <div class="container space">
             <div class="row align-items-start">
+                <div class="col-md-12">
+                    <h1 class="text-warning">
+                        <small> Counselling and Coaching platform for mental & emotional
+                            well-being
+                        </small>
+                    </h1>
+                    <p class="main-para text-primary">Edha is a professional services platform</p>
+                </div>
                 <div class="col-md-6">
                     <div class="w-100">
-                        <h1 class="text-warning">
-                            <small> Online Counselling for mental & emotional well-being</small>
-                        </h1>
-                        <p class="main-para text-primary">Online Counselling, Therapy & Life Coaching platform</p>
-                        @include('frontend.questions')
+
+
+                        <div class="">
+                            @include('frontend.questions')
+                        </div>
+
                     </div>
 
                 </div>
                 <div class="col-md-6 mb-md-0 mb-4">
-                    <div class="w-100 text-center home-content" dta-aos="flip-left">
-
-
-                        <h4 class="text-warning" align="left">
-                            Experienced Counsellors, Therapists & Psychologists for :
+                    <div class="w-100  home-content px-4" dta-aos="flip-left">
+                        <h4 class="text-warning">
+                            Our Service Offerings include :
                         </h4>
-                        <h6 align="left" class="main-para text-primary">
-                            <span>&#x25CB;</span> Mental Health Counselling <br>
-                            <span>&#x25CB;</span> Stress, Anxiety, Depression Counselling<br>
-                            <span>&#x25CB;</span> Relationship Issue Counselling <br>
-                            <span>&#x25CB;</span> Marriage & Pre Marriage counselling <br>
-                            <span>&#x25CB;</span> Breakup Counselling<br>
-                            <span>&#x25CB;</span> Anger Counselling <br>
-                            <span>&#x25CB;</span> Marriage counselling, Relationship issues <br>
-                            <span>&#x25CB;</span> Managing Stress, Situations, Difficult Times<br>
-                            <span>&#x25CB;</span> Overcoming Fear, Phobia, Trauma, OCD<br>
-                            <span>&#x25CB;</span> Overcoming Grief, Loss, Loneliness<br>
-                            <span>&#x25CB;</span> Overcoming Grief, Loss, Loneliness<br>
-                            <span>&#x25CB;</span> Figuring out Life Direction, Conflict Resolution
-                        </h6>
-                        <div class="w-100 d-block  my-3" align="center">
-                            <a href="{{ url('find-expert') }}"
-                                class="btn btn-1 text-warning border-warning rounded-pill px-md-5 position-relative">
-                                Book Appointment Now <img src="{{ url('public') }}/assets/img/bnt-arrow.svg" alt=""
-                                    class="img-fluid">
+                        <ul class="text-start offeringsul">
+                            <li>
+                                <strong> Counselling : </strong> through experienced Psychologists, Therapists, Counsellors
+                            </li>
+                            <li>
+                                <strong> Coaching :</strong> through certified Life Coaches, Performance or Relationship
+                                Coaches, Leaders &
+                                Experts from respective fields
+                            </li>
+                            <li>
+                                <strong> Others :</strong> Academic Coaching, Tuitions, Music Classes, Spirituality,
+                                Meditation, Yoga,
+                                Mindfulness, Hypnotherapy, Healing, Astrology, Tarot Card reading, Fitness by Experts, and
+                                others
+                            </li>
+                            <li>
+                                Receive free call from Professionals and seek services.
 
-                            </a>
+                            </li>
+                        </ul>
 
-
-                        </div>
                     </div>
                 </div>
-                <div class="col-md-12 text-center mx-3">
+                <div class="col-md-12 text-center mx-3 mt-5">
                     <h4 class="text-warning">
                         Why choose edha ?
                     </h4>
-                    <h5 class="main-para text-primary">One of India’s largest online therapy platform</h5>
-                    <p class="text-primary">
-                        ONLINE AUDIO OR VIDEO SESSIONS &nbsp;&nbsp;I &nbsp;&nbsp; 100% CONFIDENTIAL &nbsp;&nbsp; I
-                        &nbsp;&nbsp; EASY TO BOOK &nbsp;&nbsp;I &nbsp;&nbsp; ECONOMICAL &nbsp;&nbsp; <br> &nbsp;&nbsp; BEST
-                        PSYCHOLOGISTS &nbsp;&nbsp;I&nbsp;&nbsp; WITH SATISFACTION &nbsp;&nbsp; I &nbsp;&nbsp; BEST SUPPORT
-                        TEAM
-                    </p>
+                    <h5 class="main-para text-primary">One of Bharat’s largest professional services platform</h5>
+                    <div class="text-primary d-flex gap-2 flex-wrap justify-content-center featuresspan position-relative">
+                        <span>
+                            CONNECT WITH PROFESSIONALS
+                        </span>
+                        <span>
+                            EASY TO CONNECT
+                        </span>
+                        <span>
+                            BEST PSYCHOLOGISTS
+                        </span>
+                        <span>
+                            BEST EXPERTS
+                        </span>
+                        <span>
+                            BEST SUPPORT TEAM
+                        </span>
+                    </div>
 
                 </div>
             </div>
@@ -106,30 +121,36 @@
             <div class="row" dta-aos="fade-up">
                 <div class="col-md-12">
                     <div class="section-title text-center">
-                        <h3 class="text-warning">
-                            edha : Online Session Features & Benefits
-
-                        </h3>
+                        <h3 class="text-warning">Edha : Key benefits</h3>
                     </div>
                 </div>
             </div>
             <div class="row" dta-aos="fade-up">
                 <div class="col-md-6">
-                    <div class="d-flex justify-content-between flex-wrap ">
-                        <p align="left" class="main-para text-primary">
-                            <span>&rArr;&nbsp;</span>One-on-One sessions as per your availability <br>
-                            <span>&rArr;&nbsp;</span>100% Private & Confidential sessions<br>
-                            <span>&rArr;&nbsp;</span>Audio or Video Sessions, basis your comfort<br>
-                            <span>&rArr;&nbsp;</span>30 Min or 60 Min Session, as you find appropriate<br>
-                            <span>&rArr;&nbsp;</span>30 Minutes Counselling session starts at Rs 700 <br>
-                            <span>&rArr;&nbsp;</span>60 Minutes Counselling session starts at Rs 1000<br>
-                            <span>&rArr;&nbsp;</span>Package sessions can also be booked (2,3 or 4)<br>
-                            <span>&rArr;&nbsp;</span>Package sessions have discounts<br>
-                            <span>&rArr;&nbsp;</span>Choose your preferred language for your Session<br>
-                            <span>&rArr;&nbsp;</span>Book a Session for Self or for another person as well<br>
-                            <span>&rArr;&nbsp;</span>Experienced PAN India Counsellors, Therapists & Psychologists<br>
-                            <span>&rArr;&nbsp;</span>Quick WhatsApp chat or call support<br>
-                        </p>
+                    <div class="w-100 keybenefit">
+                        <ul>
+                            <li>
+                                Share your requirements
+                            </li>
+                            <li>
+                                Ask for a Call back from Experts
+                            </li>
+                            <li>
+                                Choose your preferred language for Therapy or professional consultation
+                            </li>
+                            <li>
+                                Best therapy by Psychologists, Therapists, Counsellors
+                            </li>
+                            <li>
+                                Experienced PAN India Counsellors, Psychologists & Therapists
+                            </li>
+                            <li>
+                                Professionals from varied fields to consult with
+                            </li>
+                            <li>
+                                Quick Support Team for any assistance
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -145,7 +166,7 @@
                                     </div>
                                 </div>
                             </a>
-                            <h4 class="text-warning pt-3 text-center">Video : How to book a Session</h4>
+                            <h4 class="text-warning pt-3 text-center">Video : About Mental Health</h4>
                         </div>
 
                     </div>
@@ -163,16 +184,20 @@
                         </h3>
                     </div>
                     <p class="text-primary">
-                        India’s best Online counselling platform for mental health, Stress, Anxiety, Depression, OCD,
-                        Marriage counselling,Relationship Counselling, Child and Adolescent, Parenting and Couple
-                        Counseling.
+                        India’s professional service platform from Experts, for mental and emotional well-being.
+                        Platform to connect with Professionals from varied fields for better experiences of life.
+                        Discover a bouquet of support services through <a class="text-decoration-underline text-primary"
+                            href="{{ url('/') }}">Edha</a> .
                     </p>
                     <p class="text-primary">
-                        Discover a bouquet of support services at edha.life. Our platform offers Mental Health Counseling,
-                        Stress Management, Anxiety Relief, Depression Support, and Relationship Counseling provided by top
-                        psychologists, therapists, and counsellors. Out Experts facilitate and guide you with empathy and
-                        care in your tough times or life challenges, guiding you through, work with you with proven
-                        strategies to feel better and for better life experiences. Trust edha.life for holistic well-being.
+                        Platform offers, Mental Health Counseling, Stress Management, Anxiety Relief, Depression Support,
+                        and Relationship counseling as provided by top Psychologists, Therapists, Counsellors. Our Experts
+                        facilitate and guide you with empathy and care in your tough times or life challenges, guiding you
+                        through, work with you with proven techniques to make you feel better and for better experiences of
+                        life.
+                    </p>
+                    <p class="text-primary">
+                        Trust Edha for a holistic well-being.
                     </p>
                 </div>
             </div>
@@ -224,7 +249,7 @@
                                 </div>
                                 <div class="w-100">
                                     <h4 class="mb-0 text-primary">
-                                        Relaxation Techniques
+                                        Others
                                     </h4>
                                 </div>
 
@@ -237,24 +262,12 @@
                                 </div>
                                 <div class="w-100">
                                     <h4 class="mb-0 text-primary">
-                                        Employee Engagement Program
-                                    </h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="offerbox">
-                            <div class="w-100 h-100 text-center">
-                                <div class="circle bg-primary p-3 rounded-circle bg-primary">
-                                    <img src="{{ url('public') }}/assets/img/expert-talk.svg" alt=""
-                                        class="img-fluid">
-                                </div>
-                                <div class="w-100">
-                                    <h4 class="mb-0 text-primary">
                                         Expert Talks
                                     </h4>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

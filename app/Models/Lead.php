@@ -16,4 +16,12 @@ class Lead extends Model
     {
         return $this->hasOne(ExpertPoint::class, 'lead_id', 'id')->where('expert_id', auth()->user()->uid);
     }
+    public function assigns()
+    {
+        return $this->hasMany(ExpertPoint::class, 'lead_id', 'id');
+    }
+    public function assigns_confirm()
+    {
+        return $this->hasMany(ExpertPoint::class, 'lead_id', 'id')->where('is_confirm', '1');
+    }
 }

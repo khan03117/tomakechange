@@ -28,6 +28,7 @@ use App\Models\Slot;
 use App\Models\SlotTimeGap;
 use App\Models\SubCategory;
 use App\Models\Video;
+use App\Models\ExpertCategory;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
@@ -61,7 +62,6 @@ class HomeController extends Controller
         $res['profileImages'] = Expert::select('profile_image')->where('is_active', '1')->inRandomOrder()->get();
         $res['states'] = State::all();
         $res['langs'] = Language::all();
-
         return view('frontend.index', $res);
     }
     public function faqs()
@@ -100,46 +100,43 @@ class HomeController extends Controller
             }
 
 
-            if ($check['category_id'] == '1') {
-                $res['dtls'] = $check;
-                $cH = date('H');
-                $ch = $cH . ':00:00';
 
-                $cgap = SlotTimeGap::where('current_hour', $ch)->first();
+            $res['dtls'] = $check;
+            $cH = date('H');
+            $ch = $cH . ':00:00';
 
-                $gap = $cgap['hour_gap'];
-                $date = date('Y-m-d H:i:s', strtotime("+{$gap} hours"));
+            $cgap = SlotTimeGap::where('current_hour', $ch)->first();
 
-                $res['title'] = 'List of Experts';
-                $res['states'] = State::orderBy('state', 'ASC')->get();
-                $items = Expert::with('state')->where('is_active', '1')->with('city');
-                if (count($sids) > 0) {
-                    $items->whereIn('experts.id', function ($q) use ($sids) {
-                        $q->select('expert_id')->from('expert_sub_categories')->whereIn('sub_category_id', $sids);
-                    });
-                }
+            $gap = $cgap['hour_gap'];
+            $date = date('Y-m-d H:i:s', strtotime("+{$gap} hours"));
 
-                $items->whereIn('experts.id', function ($q) use ($langs) {
-                    $q->select('expert_id')->from('expert_languages')->whereIn('language_id', function ($b) use ($langs) {
-                        $b->select('id')->from('languages')->whereIn('language', $langs);
-                    });
+            $res['title'] = 'List of Experts';
+            $res['states'] = State::orderBy('state', 'ASC')->get();
+            $cid = $check['category_id'];;
+            $items = Expert::whereIn('experts.id', function ($q) use ($cid) {
+                $q->from('expert_categories')->where('category_id', $cid)->select('expert_id');
+            })->with('state')->where('is_active', '1')->with('city');
+            if (count($sids) > 0 && in_array($check['category_id'], ["1", "2"])) {
+                $items->whereIn('experts.id', function ($q) use ($sids) {
+                    $q->select('expert_id')->from('expert_sub_categories')->whereIn('sub_category_id', $sids);
                 });
-                $items->with('expertize')->with('fee')->where('designation', '1')
-                    ->where('is_verified', '1')
-                    ->where('is_active', '1')
-                    ->withCount('slots')
-                    ->orderBy('slots_count', 'DESC');
-                // return response()->json($items->get());
-                // die;
-                $res['items'] = $items->get();
-                $res['lead_id'] = $lead->id;
-                $res['search_id'] = $check->id;
-                return view('frontend.counsellers', $res);
-            } else if ($check['category_id'] == '2') {
-                return redirect()->to('coaches');
-            } else if ($check['category_id'] == '3') {
-                return redirect()->to('self-help');
             }
+            $items->whereIn('experts.id', function ($q) use ($langs) {
+                $q->select('expert_id')->from('expert_languages')->whereIn('language_id', function ($b) use ($langs) {
+                    $b->select('id')->from('languages')->whereIn('language', $langs);
+                });
+            });
+            $items->with('expertize')->with('fee')
+                ->where('is_verified', '1')
+                ->where('is_active', '1')
+                ->withCount('slots')
+                ->orderBy('slots_count', 'DESC');
+            // return response()->json($items->get());
+            // die;
+            $res['items'] = $items->get();
+            $res['lead_id'] = $lead->id;
+            $res['search_id'] = $check->id;
+            return view('frontend.counsellers', $res);
         } else {
             return redirect()->to('find-expert');
         }
@@ -152,6 +149,7 @@ class HomeController extends Controller
         if ($check) {
             if ($check['category_id'] == '2') {
                 $langs = explode(',', $check['languages']);
+                $lead = Lead::where('search_id', $check->id)->first();
                 $scats = json_decode($check['sub_cats']);
                 $sids = [];
                 foreach ($scats as $cat) {
@@ -160,7 +158,9 @@ class HomeController extends Controller
                 $res['socials'] = ContactDetail::where('type', 'social')->get();
                 $res['policies'] = Policy::all();
                 $res['title'] = 'Talk to our coaches';
-                $items = Expert::where('designation', '=', '2')->where('is_active', '1')->where('is_verified', '1')
+                $items = Expert::whereIn('experts.id', function ($q) {
+                    $q->from('expert_categories')->where('category_id', '2')->select('expert_id');
+                })->where('is_active', '1')->where('is_verified', '1')
                     ->join('posts', 'posts.id', '=', 'experts.post_id', 'left')->with('fee');
 
                 $items->whereIn('experts.id', function ($q) use ($sids) {
@@ -175,6 +175,7 @@ class HomeController extends Controller
                     ->with('state')->with('city')->with('expertize')->with('fee');
                 $res['items'] = $items->get();
                 $res['search_id'] = $check->id;
+                $res['lead_id'] = $lead->id;
                 $res['title'] = "edha : Online Coaching Platform for personal growth";
                 return view('frontend.coaches-1', $res);
             } else if ($check['category_id'] == '1') {
@@ -202,7 +203,9 @@ class HomeController extends Controller
                 $res['policies'] = Policy::all();
 
                 $res['title'] = 'Talk to Self Help Team';
-                $items = Expert::where('designation', '=', '3')
+                $items = Expert::whereIn('experts.id', function ($q) {
+                    $q->from('expert_categories')->where('category_id', '2')->select('expert_id');
+                })
                     ->where('is_active', '1')
                     ->where('is_verified', '1')->with('state:id,state')
                     ->with('city:id,city')->with('expertize:id,sub_category')
@@ -214,6 +217,7 @@ class HomeController extends Controller
                 // $items->whereIn('experts.id', function($q) use ($sids){
                 //     $q->select('expert_id')->from('expert_sub_categories')->whereIn('sub_category_id', $sids);
                 // });
+
                 $items->whereIn('experts.id', function ($q) use ($langs) {
                     $q->select('expert_id')->from('expert_languages')->whereIn('language_id', function ($b) use ($langs) {
                         $b->select('id')->from('languages')->whereIn('language', $langs);
@@ -222,6 +226,8 @@ class HomeController extends Controller
                 // echo json_encode($res['items']);
                 // die;
                 $res['items'] = $items->get();
+                $lead = Lead::where('search_id', $check->id)->first();
+                $res['lead_id'] = $lead->id;
                 return view('frontend.coaches-1', $res);
             } else if ($check['category_id'] == '1') {
                 return redirect()->to('counsellers');
@@ -261,6 +267,14 @@ class HomeController extends Controller
         $res['socials'] = ContactDetail::where('type', 'social')->get();
         $res['policies'] = Policy::all();
         $res['message'] = '<h4>Thank you for subscribing.</h4>';
+        return view('frontend.thankyou', $res);
+    }
+    public function expert_fill_thank_you()
+    {
+        $res['title'] = 'Thank you';
+        $res['socials'] = ContactDetail::where('type', 'social')->get();
+        $res['policies'] = Policy::all();
+        $res['message'] = '<h4>Your profile has been successfully created! You are now part of our community of experts, and we are excited to have you on board.</h4>';
         return view('frontend.thankyou', $res);
     }
     public function contact()
@@ -532,7 +546,7 @@ class HomeController extends Controller
             }
             $res['lang_arr'] = $res['last_find'] ? $res['last_find']['languages'] : '';
 
-            return view('frontend.find-expert', $res);
+            return view('frontend.find_expert', $res);
         } else {
             if ($check['category_id'] == '1') {
                 return redirect()->to('counsellers');

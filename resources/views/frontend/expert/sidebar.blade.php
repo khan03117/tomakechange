@@ -31,46 +31,76 @@
                 Dashboard
             </a>
         </li>
-        <li>
+        {{-- <li>
             <a href="{{ route('calendar') }}"
                 class="nav-link @if (Route::currentRouteName() == 'calendar') active box-shadow-3 @endif ">
                 <i class="fi fi-ts-calendar-clock"></i>
                 Calendar
             </a>
-        </li>
+        </li> --}}
         <li>
             <a href="{{ route('leads') }}"
-                class="nav-link @if (Route::currentRouteName() == 'calendar') active box-shadow-3 @endif ">
+                class="nav-link @if (Route::currentRouteName() == 'leads') active box-shadow-3 @endif ">
                 <i class="fi fi-ts-calendar-clock"></i>
                 Leads
             </a>
         </li>
+
+        <li>
+            <a href="{{ route('myleads') }}"
+                class="nav-link @if (Route::currentRouteName() == 'myleads') active box-shadow-3 @endif ">
+                <i class="fi fi-ts-calendar-clock"></i>
+                Purchased Leads
+            </a>
+        </li>
         <li>
             <a href="{{ route('expert_wallet') }}"
-                class="nav-link @if (Route::currentRouteName() == 'calendar') active box-shadow-3 @endif ">
+                class="nav-link @if (Route::currentRouteName() == 'expert_wallet') active box-shadow-3 @endif ">
                 <i class="fi fi-ts-calendar-clock"></i>
                 Transactions
             </a>
         </li>
         <li>
             <a href="{{ route('plans') }}"
-                class="nav-link @if (Route::currentRouteName() == 'calendar') active box-shadow-3 @endif ">
+                class="nav-link @if (Route::currentRouteName() == 'plans') active box-shadow-3 @endif ">
                 <i class="fi fi-ts-calendar-clock"></i>
                 Plans
             </a>
         </li>
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ url('expert/schedules/all/all') }}"
                 class="nav-link @if (Route::currentRouteName() == 'schedules') active @endif" aria-current="page">
                 <i class="fi fi-ts-hourglass-start"></i>
                 Consultation Schedules
             </a>
-        </li>
-        <li class="nav-item">
+        </li> --}}
+        {{-- <li class="nav-item">
             <a href="{{ url('chat') }}" class="nav-link @if (Route::currentRouteName() == 'chat') active @endif"
                 aria-current="page">
                 <i class="fi fi-ts-hourglass-start"></i>
                 Chat with Clients
+            </a>
+        </li> --}}
+
+        <li>
+            <a href="{{ route('expert_photos') }}"
+                class="nav-link @if (Route::currentRouteName() == 'expert_photos') active box-shadow-3 @endif ">
+                <i class="fi fi-ts-calendar-clock"></i>
+                Photos
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('expert_reviews') }}"
+                class="nav-link @if (Route::currentRouteName() == 'expert_reviews') active box-shadow-3 @endif ">
+                <i class="fi fi-ts-calendar-clock"></i>
+                Reviews
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('expert_profile') }}"
+                class="nav-link @if (Route::currentRouteName() == 'expert_profile') active box-shadow-3 @endif ">
+                <i class="fi fi-ts-calendar-clock"></i>
+                Public Profile
             </a>
         </li>
         <li class="nav-item">

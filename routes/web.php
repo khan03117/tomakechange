@@ -122,6 +122,10 @@ Route::prefix('expert')->middleware(['auth', 'isExpert'])->group(function () {
     Route::post('export-edit/{id}', [ExpertController::class, 'expert_update'])->name('expert_update');
     Route::get('myleads', [ExpertController::class, 'myleads'])->name('myleads');
     Route::get('/transactions', [ExpertController::class, 'expert_wallet'])->name('expert_wallet');
+    Route::get('/photos', [ExpertController::class, 'add_photos'])->name('expert_photos');
+    Route::post('/photos', [ExpertController::class, 'save_photo'])->name('expert_photos.store');
+    Route::get('/reviews', [ExpertController::class, 'reviews'])->name('expert_reviews');
+    Route::get('/profile', [ExpertController::class, 'profile'])->name('expert_profile');
 });
 Route::post('expert/slot-delete', [SlotController::class, 'destroy']);
 Route::middleware('auth')->group(function () {
@@ -174,14 +178,17 @@ Route::prefix('ajax')->group(function () {
     Route::post('verify-otp', [HomeController::class, 'verify_otp'])->name('verify_otp');
     Route::post('/leads/show-details', [ExpertController::class, 'show_lead_details'])->name('leads.show');
     Route::post('send_otps', [ExpertController::class, 'send_otps'])->name('send_otps');
+    Route::post('verify_otps', [ExpertController::class, 'verify_otps'])->name('verify_otps');
+    Route::post('expert/create/save', [ExpertController::class, 'store'])->name('expert.save');
 });
 
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('about', [HomeController::class, 'about']);
 Route::post('subscribe', [HomeController::class, 'subscribe']);
-Route::post('thank-you', [HomeController::class, 'subscribe']);
+Route::any('thank-you', [HomeController::class, 'subscribe']);
 Route::get('subscribe', [HomeController::class, 'subscribe_show']);
+Route::get('expert-thank-you', [HomeController::class, 'expert_fill_thank_you'])->name('expert.thankyou');
 Route::get('gallery', [GalleryController::class, 'index']);
 Route::get('counselling/{slug?}', [HomeController::class, 'counselling']);
 Route::get('coaching', [HomeController::class, 'coaching']);
@@ -228,6 +235,8 @@ Route::get('policy/{url}', [HomeController::class, 'policy']);
 Route::get('profile/{url}', [ExpertController::class, 'show']);
 Route::get('article/{url}', [HomeController::class, 'show_blog']);
 Route::get('success-registration/{id}', [HomeController::class, 'success_registration']);
-Route::get('expert/create/{id}', [ExpertController::class, 'create']);
+Route::post('expert/create', [ExpertController::class, 'create'])->name('expert.register');
+
 Route::post('join-request/create/{id}', [AdminController::class, 'join_request_store'])->name('join_request.store');
 Route::get('/leads', [ExpertController::class, 'leads'])->name('leads');
+Route::post('/review', [ExpertController::class, 'save_reivew'])->name('review.store');

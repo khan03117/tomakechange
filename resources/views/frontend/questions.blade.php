@@ -341,7 +341,7 @@
 
                     <div class="form-group">
                         <label for="">Enter Mobile</label>
-                        <input type="text" onchange="enterMobile(event)" id="mymobile" minlength="10"
+                        <input type="text" onkeydown="enterMobile(event)" id="mymobile" minlength="10"
                             maxlength="10" name="mobile" class="form-control" required>
                     </div>
                     <div id="otpbox" class="form-group" style="display: none">
@@ -385,7 +385,7 @@
         const val = e.target.value;
         $("#name").attr('readonly', 'readonly');
         $("#email").attr('readonly', 'readonly');
-        if (val.length == 10) {
+        if (val.length > 8) {
             $("#sendOtpButton").removeAttr('disabled');
         } else {
             $("#sendOtpButton").attr('disabled', 'disabled');

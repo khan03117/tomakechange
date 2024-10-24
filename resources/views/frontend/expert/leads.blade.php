@@ -11,24 +11,23 @@
                     </div>
                 @endif
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="w-100 leadcontainer">
                     @foreach ($items as $k => $item)
                         <div id="lead{{ $item['id'] }}" onclick="openLeadDetails({{ $item['id'] }})" role="button"
                             class="w-100 mb-1  leadbox">
-                            <div class="w-100 text-end ">
-                                @if ($item->created_at)
-                                    <span class="leadtime">
-                                        {{ date('d-M-Y h:i A', strtotime($item->created_at)) }}
-                                    </span>
+                            <div class="w-100 d-flex justify-content-between lead_header">
+                                <span>
+                                    {{ $item->name }}
+                                </span>
+                                @if (!$item->is_assigned->is_confirm)
+                                    <span> <i class="fa-solid fa-circle text-warning me-1"></i> Pending</span>
                                 @endif
+
+
                             </div>
                             <ul>
-                                <li>
-                                    <strong>
-                                        Name :
-                                    </strong> {{ $item->name }}
-                                </li>
+
                                 <li>
                                     <strong> Preferred Language :</strong> {{ $item->search_data?->languages }}
                                 </li>
@@ -39,13 +38,40 @@
                                 <li>
                                     <strong>How Soon Start :</strong> {{ $item->search_data?->how_soon }}
                                 </li>
+                                <li>
+                                    <div class="d-flex justify-content-between">
+
+
+                                        <span>
+                                            <i class="fa-solid fa-circle-check"></i> Mobile Verified
+                                        </span>
+                                        <div class="text-end">
+                                            @for ($a = 0; $a < $item['assigns_confirm_count']; $a++)
+                                                <span class="contact_bar active"></span>
+                                            @endfor
+                                            @php
+                                                $restop =
+                                                    floatval($item['assigns_count']) -
+                                                    floatval($item['assigns_confirm_count']);
+                                            @endphp
+                                            @for ($a = 0; $a < $restop; $a++)
+                                                <span class="contact_bar"></span>
+                                            @endfor
+                                            <p>
+                                                @if (!$item['assigns_confirm_count'])
+                                                    <small>1st to contact</small>
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
 
                             </ul>
                         </div>
                     @endforeach
                 </div>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <div class="w-100">
                     <img src="{{ url('public/assets/img/loading_gif.gif') }}" alt="" class="img-fluid"
                         id="loadingimg" style="display: none;">

@@ -242,7 +242,7 @@
                                 <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
                                     <ul class="navbar-nav mx-auto  mb-0 p-4 pb-0 p-md-0 ">
 
-                                        <li class="nav-item dropdown">
+                                        {{-- <li class="nav-item dropdown">
                                             <a class="nav-link dropdown-toggle" href="#" role="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 About Us
@@ -264,7 +264,7 @@
                                                         href="{{ url('about') }}#how_it_works">How it
                                                         Works</a></li>
                                             </ul>
-                                        </li>
+                                        </li> --}}
                                         @foreach ($links as $item)
                                             <li class="nav-item position-relative">
                                                 <a class="nav-link dropdown-toggle" href="{{ url($item['url']) }}"
@@ -427,11 +427,7 @@
     @yield('content')
 
     <section class="space  footer position-relative text-white ">
-        {{-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-            <path fill="#077773" fill-opacity="1"
-                d="M0,192L60,202.7C120,213,240,235,360,218.7C480,203,600,149,720,112C840,75,960,53,1080,80C1200,107,1320,181,1380,218.7L1440,256L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z">
-            </path>
-        </svg> --}}
+
         <div class="container">
             <div class="row g-1">
                 <div class="col-md-3">
@@ -608,7 +604,7 @@
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     </script>
 
-    <div class="whatsapp-container d-inline-flex flex-column gap-2">
+    {{-- <div class="whatsapp-container d-inline-flex flex-column gap-2">
         <a target="_blank" title="Call us" href="tel:+91-8368623753">
             <img src="{{ url('public/assets/img/phone.png') }}" width="30" alt="WhatsApp Icon">
         </a>
@@ -616,7 +612,7 @@
             onclick="window.open(this.href,'_blank'); return false;">
             <img src="{{ url('public/assets/img/whatsapp.png') }}" alt="WhatsApp Icon">
         </a>
-    </div>
+    </div> --}}
     <a id="goTopButton"></a>
     <script>
         var btn = $('#goTopButton');

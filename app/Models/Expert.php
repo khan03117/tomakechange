@@ -96,4 +96,16 @@ class Expert extends Model
     {
         return $this->hasMany(UserSession::class, 'expert_id', 'id')->where('is_rescheduled', '1');
     }
+    public function leads()
+    {
+        return $this->hasMany(ExpertPoint::class, 'expert_id', 'id')->where('lead_id', '!=', null);
+    }
+    public function photos()
+    {
+        return $this->hasMany(ExpertPhoto::class, 'expert_id', 'id');
+    }
+    public function reviews()
+    {
+        return $this->hasMany(ExpertRating::class, 'expert_id', 'id');
+    }
 }

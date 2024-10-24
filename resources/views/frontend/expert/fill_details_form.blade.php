@@ -55,8 +55,8 @@
             <div class="row justify-content-center">
                 <div class="col-md-12 ">
                     <div class="card card-body  shadow-success">
-                        <form id="fill_details_form" action="{{ route('join_request.store', $expert['id']) }}"
-                            enctype="multipart/form-data" method="post" class="row gy-4">
+                        <form id="fill_details_form" action="" enctype="multipart/form-data" method="post"
+                            class="row gy-4">
                             @csrf
                             <div class="col-md-12">
                                 <div class="w-100 p-2 bg-success-subtle">
@@ -97,14 +97,17 @@
                                     Enter Name <small class="text-danger">*Required</small>
                                 </label>
                                 <input type="text" name="name" id="name"
-                                    value="{{ $expert['first_name'] . ' ' . $expert['last_name'] }}" class="form-control"  maxlength="150">
+                                    value="{{ $expert['first_name'] . ' ' . $expert['last_name'] }}" class="form-control"
+                                    maxlength="150">
                             </div>
-                            <div class="col-md-3 form-group">
+                            <input type="hidden" name="mobile" value="{{ $mobile->mobile }}">
+                            <input type="hidden" name="email" value="{{ $email->email }}">
+                            {{-- <div class="col-md-3 form-group">
                                 <label for="">
                                     Enter Email <small class="text-danger">*Required</small>
                                 </label>
                                 <input type="text" name="email" id="email" value="{{ $expert['email'] }}"
-                                    class="form-control"  maxlength="200" readonly>
+                                    class="form-control" maxlength="200" readonly>
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="">
@@ -113,12 +116,13 @@
                                 <input type="text" name="mobile"
                                     oninput="return this.value = this.value.replace(/[^0-9\.]/g,'');" id="mobile"
                                     value="{{ $expert['mobile'] }}" class="form-control nospace" readonly>
-                            </div>
+                            </div> --}}
                             <div class="col-md-3 form-group">
                                 <label for="">
                                     Select State <small class="text-danger">*Required</small>
                                 </label>
-                                <select name="state_id" onchange="getCityByState(event)" id="state_id" class="form-select" required>
+                                <select name="state_id" onchange="getCityByState(event)" id="state_id" class="form-select"
+                                    required>
                                     <option value="">---Select---</option>
                                     @foreach ($states as $str)
                                         <option value="{{ $str['id'] }}" @selected($str['id'] == $expert['state'])>
@@ -169,20 +173,27 @@
                                     Education Stream
                                 </label>
                                 <input type="text" name="stream" id="stream" value="{{ $expert['stream'] }}"
-                                    class="form-control"  maxlength="150" >
+                                    class="form-control" maxlength="150">
                             </div>
                             <div class=" col-md-3 form-group">
                                 <label for="">
                                     Enter Role <small class="text-danger">*Required</small>
                                 </label>
-                                <select name="apply_for" onchange="get_sub_category(event)" id="apply_for"
-                                    class="form-select" readonly="readonly">
-                                    <option value="" selected disabled>--Select--</option>
+                                <select name="apply_for[]" id="apply_for" class="form-select" multiple readonly="readonly">
+                                    <option value="" disabled>--Select--</option>
                                     @foreach ($categories as $cat)
-                                        <option value="{{ $cat['id'] }}" @selected($cat['id'] == $mcat) @disabled($cat['id'] != $mcat)>
+                                        <option value="{{ $cat['id'] }}" @selected($cat['id'] == $mcat)>
                                             {{ $cat['title'] }}</option>
                                     @endforeach
                                 </select>
+                                <script>
+                                    $("#apply_for").select2({
+                                        closeOnSelect: false,
+                                        multiple: true,
+                                        placeholder: "Apply For",
+                                        allowClear: true
+                                    });
+                                </script>
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="">
@@ -211,51 +222,7 @@
                                     oninput="return this.value = this.value.replace(/[^0-9\.]/g,'');" name="experience"
                                     id="experience" placeholder="Enter experience" class="form-control nospace" required>
                             </div>
-
-
-                            <div class="col-md-3 form-group">
-                                <label for="">
-                                    Expertise <small class="text-danger"></small>
-                                </label>
-                                <select name="expertises[]" multiple id="sub_category" class="form-select" required>
-                                    <option value="">--Select--</option>
-                                    @foreach ($exps as $exp)
-                                        <option value="{{ $exp['id'] }}">{{ $exp['sub_category'] }}</option>
-                                    @endforeach
-                                </select>
-                                <script>
-                                    $("#sub_category").select2({
-                                        closeOnSelect: false,
-                                        multiple: true,
-                                        search: true
-                                    });
-                                </script>
-                            </div>
-                            <div class="col-md-3" @if ($mcat != '1') style="display: none;" @endif>
-                                <label for="">
-                                    Therapy
-                                </label>
-                                <input type="text" name="therapy" id="therapy" placeholder="Therapy you provide"
-                                    class="form-control" maxlength="150">
-                            </div>
-
                             <script>
-                                $("#apply_for").on('change', function() {
-                                    let cid = $(this).val();
-
-                                    $.post(`${url}/ajax/get_posts`, {
-                                        id: cid
-                                    }, function(res) {
-                                        $("#postname").html(res);
-                                        if (cid != '1') {
-                                            $("#sub_category").parent().hide();
-                                            $("#therapy").parent().hide();
-                                        } else {
-                                            $("#sub_category").parent().show();
-                                            $("#therapy").parent().show();
-                                        }
-                                    });
-                                });
                                 $("#postname").on('change', function() {
                                     let rl = $(this).val();
                                     if (rl == '0') {
@@ -271,10 +238,57 @@
 
                             <div class="col-md-3 form-group">
                                 <label for="">
+                                    Expertise <small class="text-danger"></small>
+                                </label>
+                                <select name="expertises[]" multiple id="sub_category" class="form-select">
+                                    <option value="">--Select--</option>
+                                    @foreach ($exps as $exp)
+                                        <option value="{{ $exp['id'] }}">{{ $exp['sub_category'] }}</option>
+                                    @endforeach
+                                </select>
+                                <script>
+                                    $("#sub_category").select2({
+                                        closeOnSelect: false,
+                                        multiple: true,
+                                        placeholder: "Select  Expertises",
+                                        allowClear: true
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-3" @if ($mcat != '1') style="display: none;" @endif>
+                                <label for="">
+                                    Therapy
+                                </label>
+                                <input type="text" name="therapy" id="therapy" placeholder="Therapy you provide"
+                                    class="form-control" maxlength="150">
+                            </div>
+
+
+                            <div class="col-md-3 form-group">
+                                <label for="">
+                                    Mode of Contact <small class="text-danger">*Required</small>
+                                </label>
+                                <select name="mode[]" multiple id="mode" class="form-select" required>
+
+                                    <option value="Offline">Offline</option>
+                                    <option value="Online">Online</option>
+                                </select>
+                                <script>
+                                    $("#mode").select2({
+                                        closeOnSelect: false,
+                                        multiple: true,
+                                        search: true
+                                    })
+                                </script>
+                            </div>
+
+
+                            <div class="col-md-3 form-group">
+                                <label for="">
                                     Languages <small class="text-danger">*Required</small>
                                 </label>
                                 <select name="language[]" multiple id="language" class="form-select" required>
-                                    <option value="" disabled>---Select---</option>
+
                                     @foreach ($languages as $l)
                                         <option value="{{ $l['language'] }}">{{ $l['language'] }}</option>
                                     @endforeach
@@ -283,7 +297,9 @@
                                     $("#language").select2({
                                         closeOnSelect: false,
                                         multiple: true,
-                                        search: true
+                                        placeholder: "Select a language",
+                                        allowClear: true
+
                                     })
                                 </script>
                             </div>
@@ -294,38 +310,9 @@
                                 </label>
                                 <input type="text" name="password" id="password" class="form-control" required>
                             </div>
-                            <div class="col-md-3 form-group">
-                                <label for="">
-                                    Mode of Contact <small class="text-danger">*Required</small>
-                                </label>
-                                <select name="mode[]" multiple id="mode" class="form-select" required>
 
-                                    <option value="Video">Video</option>
-                                    <option value="Audio">Audio</option>
-                                </select>
-                                <script>
-                                    $("#mode").select2({
-                                        closeOnSelect: false,
-                                        multiple: true,
-                                        search: true
-                                    })
-                                </script>
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label for="">
-                                    30 Min Fee <small class="text-danger">*Required</small>
-                                </label>
-                                <input type="number" minlength="3" maxlength="4" placeholder="minimum 700"
-                                    oninput="return this.value = this.value.replace(/[^0-9\.]/g,'');" name="fee[]" id="" min="{{$charges->for_30}}" class="form-control nospace" required>
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label for="">
-                                    60 Min Fee <small class="text-danger">*Required</small>
-                                </label>
-                                <input type="number" placeholder="minimum 1200"
-                                    oninput="return this.value = this.value.replace(/[^0-9\.]/g,'');"   name="fee[]" id="" min="{{$charges->for_60}}" class="form-control nospace" required>
-                            </div>
-                            @if($mcat == '1')
+
+
                             <div class="col-md-12">
                                 <label for="">
                                     Additional Details <small class="text-primary">(if any)</small>
@@ -350,9 +337,9 @@
                                         });
                                 </script>
                             </div>
-                            @endif
+
                             <div class="col-md-12 mt-5 form-group">
-                                <input type="submit" value="Save Changes"
+                                <input type="submit" id="submitButton" value="Save Changes"
                                     class="btn px-md-5 py-3 rounded-pill btn-success">
                             </div>
                         </form>
@@ -361,6 +348,40 @@
             </div>
         </div>
     </section>
-    {{-- <script src="{{ url('public/js/js-app.js') }}"></script>
-    <script src="{{ url('public/assets/js/app.js') }}"></script> --}}
+    <script>
+        $('#fill_details_form').on('submit', function(e) {
+            e.preventDefault();
+
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: "{{ route('expert.save') }}", // Replace with your route
+                method: "POST",
+                data: formData,
+                contentType: false, // Prevent jQuery from setting content type
+                processData: false, // Prevent jQuery from processing the data
+                success: function(resp) {
+                    if (resp.success == "1") {
+                        $("#submitButton").css({
+                            display: 'none',
+                            opacity: '0'
+                        })
+                        const router = "{{ route('expert.thankyou') }}";
+                        window.location.href = router;
+                    }
+                    if (resp.success == "0") {
+                        toastr.error(resp.message, 'Error');
+                    }
+
+
+                },
+                error: function(xhr) {
+                    // Handle error response
+                    console.log(xhr.responseText);
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
+    </script>
 @endsection

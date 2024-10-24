@@ -9,11 +9,11 @@ use App\Models\City;
 use App\Models\ContactDetail;
 use App\Models\Expert;
 use App\Models\ExpertFee;
-use App\Mail\CustomMail;
 use App\Models\ExpertPoint;
+use App\Models\ExpertRating;
+use App\Models\ExpertCategory;
 use App\Models\FindExpert;
-use App\Models\JoinRequest;
-
+use App\Http\AllTraits\MyTrait;
 use App\Models\MobileOtp;
 use App\Models\LeadPrice;
 use App\Models\Language;
@@ -33,14 +33,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Exports\ExpertsExcel;
+use App\Models\ExpertPhoto;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class ExpertController extends Controller
-
 {
+    use MyTrait;
     /**
      * Display a listing of the resource.
      *
@@ -74,6 +77,8 @@ class ExpertController extends Controller
             'otp' => rand(1111, 9999),
             'created_at' => date('Y-m-d H:i:s')
         ];
+        MobileOtp::where(['mobile' => $request->mobile])->delete();
+        DB::table('otps')->where(['email' => $request->email])->delete();
         MobileOtp::insert($mdata);
         $eotp = rand(1111, 9999);
         $email = $request->email;
@@ -93,6 +98,36 @@ class ExpertController extends Controller
         // } else {
         //     return response()->json(['success' => '0', 'message' => 'OTP Send to your email.']);
         // }
+    }
+    public function verify_otps(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'email' => 'required|email|unique:users,email|exists:otps,email',
+            'mobile' => 'required|unique:users,mobile|exists:mobile_otps,mobile',
+            'mobileotp' => 'required|numeric|exists:mobile_otps,otp',
+            'emailotp' => 'required|numeric|exists:otps,otp',
+        ]);
+        if ($validation->fails()) {
+            return response()->json(['success' => '0', 'errors' => $validation->errors(), 'message' => 'Invalid request credentials']);
+        } else {
+            $edata = [
+                'email' => $request->email,
+                'otp' => $request->emailotp,
+            ];
+            $mdata = [
+                'mobile' => $request->mobile,
+                'otp' => $request->mobileotp,
+            ];
+            $isVerify = MobileOtp::where($mdata)->first();
+            $everify = DB::table('otps')->where($edata)->first();
+            if ($isVerify && $everify) {
+                MobileOtp::where('id', $isVerify->id)->update(['is_verified' => '1']);
+                DB::table('otps')->where('id', $everify->id)->update(['is_verified' => '1']);
+                return response()->json(['success' => '1', 'message' => 'Otps verified successfully', 'data' => ['mobile' => $isVerify->id, 'email' => $everify->id]]);
+            } else {
+                return response()->json(['success' => '0', 'message' => 'Invalid otps']);
+            }
+        }
     }
     public function export()
     {
@@ -151,36 +186,35 @@ class ExpertController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id)
+    public function create(Request $request)
     {
         date_default_timezone_set('Asia/kolkata');
-
-        $res['title'] = 'Fill Details';
-        $item = $res['item'] = JoinRequest::where('uuid', $id)->with('post_detail')->with('category')->first();
-        // echo json_encode($item);
+        $request->validate([
+            'email' => 'required|exists:otps,id',
+            'mobile' => 'required|exists:mobile_otps,id',
+        ]);
+        $res['expert'] = new Expert();
+        $res['email'] = DB::table('otps')->where('id', $request->email)->first();
+        $res['mobile'] = MobileOtp::where('id', $request->mobile)->first();
+        $res['policies'] = Policy::all();
+        $res['socials'] = ContactDetail::where('type', 'social')->get();
+        $res['states'] = State::all();
+        $res['cities'] = City::get();
+        $res['categories'] = Category::all();
+        $res['languages'] = Language::all();
+        $res['positions'] = Post::get();
+        $res['exps'] = SubCategory::all();
+        $res['qualifications'] = Qualification::all();
+        $res['mcat'] = 0;
+        $res['charges'] = DB::table('Charges')->first();
+        // return response()->json($res['charges']);
         // die;
-        if ($item) {
-
-            $res['expert'] = $item;
-            // echo json_encode($item);
-            // die;
-            $res['policies'] = Policy::all();
-            $res['socials'] = ContactDetail::where('type', 'social')->get();
-            $res['states'] = State::all();
-            $res['cities'] = City::where('state_id', $item['state'])->get();
-            $res['categories'] = Category::all();
-            $res['languages'] = Language::all();
-            $res['positions'] = Post::where('category_id', $item['category']['id'])->get();
-            $res['cities'] = City::where('state_id', $item['state'])->get();
-            $res['exps'] = SubCategory::where('category_id', $item['category']['id'])->get();
-            $res['qualifications'] = Qualification::all();
-            $res['mcat'] = $item['category']['id'];
-            $res['charges'] = DB::table('Charges')->where('category_id', $item['category']['id'])->first();
-            // return response()->json($res['charges']);
-            // die;
-            if ($item['is_created'] == '0' && $item['offer_sent'] == '1') {
-                return view('frontend.expert.fill_details_form', $res);
-            }
+        $check = User::where(['email' => $res['email']->email])->first();
+        $checkm = User::where(['mobile' => $res['mobile']->mobile])->first();
+        if ($check || $checkm) {
+            return redirect()->route('expert.thankyou');
+        } else {
+            return view('frontend.expert.fill_details_form', $res);
         }
     }
     public function expert_reenter()
@@ -196,7 +230,97 @@ class ExpertController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        date_default_timezone_set('Asia/kolkata');
+        $validation = Validator::make($request->all(), [
+            'password' => 'required',
+            'pincode' => 'required',
+            'file' => 'image|mimes:png,jpg,jpeg,svg|max:2048',
+            'postname' => 'required',
+            'experience' => 'required',
+            'qualification' => 'required',
+            'city_id' => 'required',
+            'state_id' => 'required',
+            'pincode' => 'required',
+            'language' => 'required',
+            'pincode' => 'required',
+            'therapy' => 'max:150',
+            'stream' => 'max:150'
+        ]);
+        if ($validation->fails()) {
+            $message = $validation->errors()->first();
+            return response()->json(['data' => [], 'success' => '0', 'errors' => $validation->errors(), 'message' => $message]);
+        }
+        date_default_timezone_set('Asia/kolkata');
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $file_name = time() . $file->getClientOriginalName();
+            $file->move(public_path('upload'), $file_name);
+        } else {
+            $file_name = $request->hfile;
+        }
+        $url = $this->make_url(Str::uuid() . '-' . $request->name);
+
+        $data = [
+            'profile_image' => $file_name,
+            'url' => $url,
+            'name' => $request->name,
+            'email' => strtolower($request->email),
+            'mobile' => $request->mobile,
+            'designation' => 0,
+            'qualification' => $request->qualification,
+            'experience' => $request->experience,
+            'stream' => $request->stream,
+            'therapy' => $request->therapy,
+            'state_id' => $request->state_id,
+            'city_id' => $request->city_id,
+            'pincode' => $request->pincode,
+            'post_id' => $request->postname,
+            'modes' => implode(',', $request->mode),
+            'custom_postname' => $request->custom_post_name,
+            'languages' => implode(',', $request->language),
+            'additional_details' => $request->additional_details,
+            'is_verified' => '1',
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        // echo json_encode($data);
+        // die;
+        $uid = Expert::insertGetId($data);
+        foreach ($request->apply_for as $ap) {
+            ExpertCategory::insert(['expert_id' => $uid, 'category_id' => $ap]);
+        }
+        if ($request->expertises) {
+            foreach ($request->expertises as $ex) {
+                ExpertSubCategory::insert(['expert_id' => $uid, 'sub_category_id' => $ex]);
+            }
+        }
+        if ($request->language) {
+            foreach ($request->language as $lang) {
+                $lid = Language::where('language', $lang)->first();
+                if ($lid) {
+                    DB::table('expert_languages')->insert(['expert_id' => $uid, 'language_id' => $lid['id'],  'created_at' => date('Y-m-d H:i:s')]);
+                }
+            }
+        }
+        // $times = ['00:30:00', '01:00:00'];
+        // foreach ($request->fee as $i => $fee) {
+        //     ExpertFee::insert(['expert_id' => $uid, 'fee' => $fee, 'duration' =>  $times[$i], 'rate' => $request->rate, 'fixed_fee' => $request->fixed_fee]);
+        // }
+
+        $udata = [
+            'uid' => $uid,
+            'name' => $request->name,
+            'email' => strtolower($request->email),
+            'mobile' => $request->mobile,
+            'password' => Hash::make($request->password),
+            'remember_token' => $request->password,
+            'designation' => 'Expert',
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+
+        if (User::insert($udata)) {
+
+            return response()->json(['success' => '1', 'errors' => [], 'message' => 'Expert profile created successfully']);
+        }
     }
 
     /**
@@ -207,13 +331,21 @@ class ExpertController extends Controller
      */
     public function show(Expert $expert, $url)
     {
-
         date_default_timezone_set('Asia/kolkata');
+        $sid = Session::getId();
+        $check = FindExpert::where('session_id', $sid)->first();
         $res['policies'] = Policy::all();
         $res['socials'] = ContactDetail::where('type', 'social')->get();
-        $res['expert'] = Expert::where('url', $url)->with('post')->with('state')->with('city')->with('expertize')->orderBy('id', 'DESC')->first();
-        // echo json_encode($res['expert']);
-        // die;
+        $res['expert'] = Expert::where('url', $url)->with('photos')->with(['reviews' => function ($q) {
+            $q->where('show_web', '1');
+        }])->with('post')->with('state')->with('city')->with('expertize')->orderBy('id', 'DESC')->first();
+        if ($check) {
+            $lead = Lead::where('search_id', $check->id)->first();
+            $res['lead_id'] = $lead->id;
+        } else {
+            $res['lead_id'] = null;
+        }
+
         return view('frontend.profile', $res);
     }
 
@@ -242,12 +374,9 @@ class ExpertController extends Controller
      */
     public function update(Request $request, Expert $expert)
     {
-        // echo 1;
-        // die;
         date_default_timezone_set('Asia/kolkata');
         $request->validate([
             'password' => 'required|confirmed|min:6',
-
             'name' => 'required|min:4'
         ]);
         $data = [
@@ -259,10 +388,8 @@ class ExpertController extends Controller
         $eid = Auth::user()->uid;
         if (Expert::where('id', $eid)->update($data)) {
             $data['password'] = Hash::make($request->password);
-
             User::where(['id' => $id, 'designation' => 'Expert'])->update($data);
         }
-
         return redirect()->back()->with('success', 'updated successfully');
     }
 
@@ -308,7 +435,17 @@ class ExpertController extends Controller
         $res['open_sessions'] = Slot::whereDate('slot', '>', date('Y-m-d'))->where($fdata)->where('is_paid', '1')->count();
         $res['outdated_open_sessions'] = Slot::whereDate('slot', '<', date('Y-m-d'))->where($fdata)->where('is_paid', '1')->count();
         $res['completed_sessions'] = Slot::where(['expert_id' => $eid, 'booking_status' => 'done'])->where('is_paid', '1')->count();
+        $res['expert'] = Expert::where('id', $eid)->with('expertize')->withCount('leads')
+            ->withCount([
+                'leads as confirmed_leads_count' => function ($query) {
+                    $query->where('is_confirm', "1");
+                }
+            ])
+            ->first();
+        $res['points'] =  ExpertPoint::getBalancePoints();
 
+        // echo json_encode($res['expert']);
+        // die;
         $res['title'] = 'Expert Dashboard';
         return view('frontend.expert.dashboard', $res);
     }
@@ -348,6 +485,77 @@ class ExpertController extends Controller
             return view('admin.experts.calendar', $res);
         }
     }
+    public function profile()
+    {
+        $title = "Reviews";
+        $eid = auth()->user()->uid;
+        $expert = Expert::where('id', $eid)->with('photos')->with(['reviews' => function ($q) {
+            $q->where('show_web', '1');
+        }])->first();
+
+        $res = compact('title', 'expert');
+        $res['policies'] = Policy::all();
+        $res['socials'] = ContactDetail::where('type', 'social')->get();
+        return view('frontend.expert.profile', $res);
+    }
+    public function reviews()
+    {
+        $title = "Reviews";
+        $eid = auth()->user()->uid;
+        $items = ExpertRating::where('expert_id', $eid)->get();
+
+        $res = compact('title', 'items');
+        $res['policies'] = Policy::all();
+        $res['socials'] = ContactDetail::where('type', 'social')->get();
+        return view('frontend.expert.reviews', $res);
+    }
+    public function save_reivew(Request $request)
+    {
+        // echo json_encode($request->all());
+        // die;
+        // $request->validate([
+        //     'name' => 'required|min:3',
+        //     'review' => 'required',
+        //     'expert_id' => 'required|exists:experts,id'
+        // ]);
+        $data = [
+            'expert_id' => $request->expert_id,
+            'name' => $request->name,
+            'review' => $request->review,
+            'rating' => $request->rating,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        ExpertRating::insert($data);
+        return redirect()->back()->with('success', 'Review saved successfully');
+    }
+    public function add_photos()
+    {
+        $title = "Add Photos";
+        $eid = auth()->user()->uid;
+        $photos = ExpertPhoto::where('expert_id', $eid)->get();
+
+        $res = compact('title', 'photos');
+        $res['policies'] = Policy::all();
+        $res['socials'] = ContactDetail::where('type', 'social')->get();
+        return view('frontend.expert.photos', $res);
+    }
+    public function save_photo(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:png,jpg|max:2048'
+        ]);
+        $image = $request->file('image');
+        $imageName = date('Ymdhis') . '_' . $image->getClientOriginalName();
+        $image->move(public_path('/upload'), $imageName);
+        $eid = auth()->user()->uid;
+        $data = [
+            'expert_id' => $eid,
+            'image' => "public/upload/" . $imageName
+        ];
+        ExpertPhoto::insert($data);
+        return redirect()->back()->with('success', 'Image saved successfully');
+    }
+
     public function expert_close_request()
     {
         $res['policies'] = Policy::all();
@@ -430,8 +638,8 @@ class ExpertController extends Controller
         $res['fee_60'] = ExpertFee::where(['expert_id' => $eid, 'duration' => '01:00:00'])->first();
         $exps = ExpertSubCategory::where('expert_id', $eid)->select('sub_category_id')->get();
         $res['charges'] = DB::table('Charges')->where('category_id', $res['expert']['designation'])->first();
-
-        // echo json_encode($res['expert']);
+        $res['ecats'] = ExpertCategory::where('expert_id', $eid)->pluck('category_id')->all();
+        // echo json_encode($res['ecats']);
         // die;
         $res['expsz'] = [];
         foreach ($exps as $ex) {
@@ -531,7 +739,7 @@ class ExpertController extends Controller
     {
         date_default_timezone_set('Asia/kolkata');
         $request->validate([
-            'fee' => 'required',
+
             'postname' => 'required',
             'experience' => 'required',
             'qualification' => 'required',
@@ -566,17 +774,17 @@ class ExpertController extends Controller
             'updated_at' => date('Y-m-d H:i:s')
         ];
         Expert::where('id', $id)->update($data);
-
         if ($request->expertises) {
             ExpertSubCategory::where('expert_id', $id)->delete();
             foreach ($request->expertises as $ex) {
                 ExpertSubCategory::insert(['expert_id' => $id, 'sub_category_id' => $ex]);
             }
         }
-        $times = ['00:30:00', '01:00:00'];
-        ExpertFee::where('expert_id', $id)->delete();
-        foreach ($request->fee as $i => $fee) {
-            ExpertFee::insert(['expert_id' => $id, 'fee' => $fee, 'duration' => $times[$i]]);
+        if ($request->apply_for) {
+            ExpertCategory::where('expert_id', $id)->delete();
+            foreach ($request->apply_for as $ap) {
+                ExpertCategory::insert(['expert_id' => $id, 'category_id' => $ap]);
+            }
         }
         return redirect()->back()->with('success', 'Updated successfully');
     }
@@ -588,7 +796,7 @@ class ExpertController extends Controller
 
         $items = Lead::whereIn('id', function ($q) {
             $q->from('expert_points')->where('expert_id', auth()->user()->uid)->where('is_confirm', '0')->select('lead_id');
-        })->with('search_data')->with('is_assigned')->orderBy('id', 'DESC')->get();
+        })->with('search_data')->with('is_assigned')->withCount('assigns')->withCount('assigns_confirm')->orderBy('id', 'DESC')->get();
         $res = compact('items', 'title', 'policies', 'socials');
         // return response()->json($items);
         // die;
@@ -634,6 +842,7 @@ class ExpertController extends Controller
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ];
             ExpertPoint::where($data)->update($udata);
+            Lead::where('id', $lead_id)->update(['request_sent' => '1']);
             return response()->json(['success' => '1', 'errors' => []]);
         }
     }

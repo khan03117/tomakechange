@@ -10,7 +10,7 @@
                         <div class="col-md-12">
                             <div class="section-title text-center text-warning">
                                 <h3>
-                                    Talk to our Counsellors
+                                    Talk to our Experts
                                 </h3>
                                 <p class="text-primary">
                                     Meet our expert Team, from all across Bharat.<br>
@@ -85,51 +85,24 @@
                                                                 </p>
                                                             </td>
                                                         </tr>
-                                                        {{-- <tr>
-                                                    <td>
-                                                        <i class="fi fi-ts-camera-movie text-primary"></i> Session Mode
-                                                    </td>
-                                                    <td>
-                                                        <p>
-                                                            @foreach (explode(',', $item['modes']) as $mod)
-                                                                <span class="me-2">
-                                                                    {{ $mod }} @if (!$loop->last)
-                                                                        ,
-                                                                    @endif
-                                                                </span>
-                                                            @endforeach
-                                                        </p>
-                                                    </td>
-                                                </tr> --}}
-
-                                                        {{-- <tr>
-                                                    <td>
-                                                        <i class="fi text-success fi-ts-indian-rupee-sign"></i> Session Fee
-                                                    </td>
-                                                    <td>
-                                                        @foreach ($item['fee'] as $fe)
-                                                            <p>
-                                                                {{ (strtotime($fe['duration']) - strtotime(date('Y-m-d'))) / 60 }}
-                                                                Minutes @ {{ $fe['fee'] }}
-                                                            </p>
-                                                        @endforeach
-                                                    </td>
-                                                </tr> --}}
-                                                        {{-- <tr>
-                                                    <td>
-                                                        <i class="fi fi-ts-puzzle-alt text-primary"></i> Earliest Available
-                                                    </td>
-                                                    <td>
-                                                        @foreach ($item['slots'] as $j => $slot)
-                                                            @if ($j == 0)
+                                                        <tr>
+                                                            <td>
+                                                                <i class="fi fi-ts-camera-movie text-primary"></i>
+                                                                Availability Mode
+                                                            </td>
+                                                            <td>
                                                                 <p>
-                                                                    {{ date('d-M-Y', strtotime($slot['slot'])) }},
-                                                                    {{ date('h:i A', strtotime($slot['slot'])) }}
+                                                                    @foreach (explode(',', $item['modes']) as $mod)
+                                                                        <span class="me-2">
+                                                                            {{ $mod }} @if (!$loop->last)
+                                                                                ,
+                                                                            @endif
+                                                                        </span>
+                                                                    @endforeach
                                                                 </p>
-                                                            @endif
-                                                        @endforeach
-                                                    </td>
-                                                </tr> --}}
+                                                            </td>
+                                                        </tr>
+
                                                     </table>
                                                 </div>
 
@@ -156,10 +129,10 @@
                                         </div>
                                         <div class="col-md-6 mb-md-0 mb-3">
                                             <div class="w-100 text-end">
-                                                {{-- <a href="{{ url('profile/' . $item['url']) }}"
-                                            class="btn btn-outline-success rounded-pill">
-                                            View Profile
-                                        </a> --}}
+                                                <a href="{{ url('profile/' . $item['url']) }}"
+                                                    class="btn btn-outline-success rounded-pill">
+                                                    View Profile
+                                                </a>
                                                 <button data-expert="{{ $item['id'] }}"
                                                     onclick="sendCallBackRequest(event)"
                                                     class="btn btn-primary rounded-pill bookingbtn">
